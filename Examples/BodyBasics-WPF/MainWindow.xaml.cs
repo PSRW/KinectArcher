@@ -325,6 +325,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                 {
                     // Draw a transparent background to set the render size
                     dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+                    dc.DrawImage(new BitmapImage(new Uri(@"C:\Users\Student\Desktop\kinect\KinectArcher\Examples\BodyBasics-WPF\Images\Logo.png")), new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
                     int penIndex = 0;
                     foreach (Body body in this.bodies)
