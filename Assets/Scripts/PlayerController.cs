@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Windows.Kinect;
 
 public class PlayerController : MonoBehaviour {
 
     public GameObject arrowTemplate;
     public GameObject arrowSpawn;
-
+    private KinectSensor kinectSensor;
     public float speedTimeFactor;
     private float speedCoefficient = 0;
     void Start () {
