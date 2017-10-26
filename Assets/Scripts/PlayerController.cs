@@ -1,5 +1,6 @@
 ﻿using System.Collections; 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Windows.Kinect;
 
@@ -39,17 +40,27 @@ public class PlayerController : MonoBehaviour {
             frame.Dispose();
             frame = null;
 
-            Vector2 wristPos = new Vector2(bodyPartsData[1].Joints[JointType.WristLeft].Position.X,
-                                           bodyPartsData[1].Joints[JointType.WristLeft].Position.Y);
-            Vector2 spineBasePos = new Vector2(bodyPartsData[1].Joints[JointType.SpineBase].Position.X,
-                                            bodyPartsData[1].Joints[JointType.SpineBase].Position.Y);
-            Vector2 spineShoulderPos = new Vector2(bodyPartsData[1].Joints[JointType.SpineShoulder].Position.X,
-                                                bodyPartsData[1].Joints[JointType.SpineShoulder].Position.Y);
+            var trackedBody = bodyPartsData.SingleOrDefault(x => x.IsTracked);
+            
+            if (trackedBody != null)
+            {
+                Vector2 leftWristPos = new Vector2(trackedBody.Joints[JointType.WristLeft].Position.X,
+                               trackedBody.Joints[JointType.WristLeft].Position.Y);
+                Vector2 rightWristPos = new Vector2(trackedBody.Joints[JointType.WristRight].Position.X,
+                                                trackedBody.Joints[JointType.WristRight].Position.Y);
+                Vector2 ortographicPoint = new Vector2(rightWristPos.x, leftWristPos.y);
 
-            Debug.Log("wristPos: " + wristPos.ToString() + "spineBasePos: " + spineBasePos.ToString());
+                float wristToWristDistance = (rightWristPos - leftWristPos).magnitude;
 
-            float heigth = new Vector2(Mathf.Abs(wristPos.x - spineShoulderPos.x), spineShoulderPos.y).magnitude;
-            Debug.Log("hegth: " + heigth.ToString());
+                float pointingWristToOrtographicPoint = (rightWristPos - ortographicPoint).magnitude;
+
+                float angle = Mathf.Asin(wristToWristDistance / pointingWristToOrtographicPoint);
+                angle *= Mathf.Deg2Rad;
+
+                var a = 1;
+
+            }
+
         }
         
         if(Input.GetKey(KeyCode.Space))
