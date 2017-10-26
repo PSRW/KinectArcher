@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectArcher", "KinectArcher.csproj", "{F693A552-6535-635D-3AA0-9B5B192580F5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectArcher.Plugins", "KinectArcher.Plugins.csproj", "{83012352-AD5F-3E25-770E-3CE58598D239}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectArcher", "KinectArcher.csproj", "{F693A552-6535-635D-3AA0-9B5B192580F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectArcher.Editor.Plugins", "KinectArcher.Editor.Plugins.csproj", "{3D560173-7882-EA41-51B6-21399C383224}"
 EndProject
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F693A552-6535-635D-3AA0-9B5B192580F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F693A552-6535-635D-3AA0-9B5B192580F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F693A552-6535-635D-3AA0-9B5B192580F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F693A552-6535-635D-3AA0-9B5B192580F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{83012352-AD5F-3E25-770E-3CE58598D239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{83012352-AD5F-3E25-770E-3CE58598D239}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83012352-AD5F-3E25-770E-3CE58598D239}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83012352-AD5F-3E25-770E-3CE58598D239}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F693A552-6535-635D-3AA0-9B5B192580F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F693A552-6535-635D-3AA0-9B5B192580F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F693A552-6535-635D-3AA0-9B5B192580F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F693A552-6535-635D-3AA0-9B5B192580F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D560173-7882-EA41-51B6-21399C383224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3D560173-7882-EA41-51B6-21399C383224}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D560173-7882-EA41-51B6-21399C383224}.Release|Any CPU.ActiveCfg = Release|Any CPU
