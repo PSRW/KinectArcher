@@ -3,15 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Windows.Kinect;
 
+
 public class PlayerController : MonoBehaviour {
+
 
     public GameObject arrowTemplate;
     public GameObject arrowSpawn;
+    public GameObject bowString;
+
+    private LineRenderer bowStringRenderer;
+
+    private Vector3 bowStringMiddlePointPosition = new Vector3();
+    private Vector3 bowStringMiddlePiontInitialPosition = new Vector3();
+    private Vector3 arrowSpawnInitialPosition = new Vector3();
+
     private KinectSensor kinectSensor;
     public float speedTimeFactor;
     private float speedCoefficient = 0;
     void Start () {
-		
+        bowStringRenderer = bowString.GetComponent<LineRenderer>();
+        arrowSpawnInitialPosition = arrowSpawn.transform.localPosition;
+
+        bowStringMiddlePiontInitialPosition = bowStringRenderer.GetPosition(1);
 	}
 
     void FixedUpdate () {
@@ -21,12 +34,11 @@ public class PlayerController : MonoBehaviour {
         
         if(Input.GetKey(KeyCode.Space))
         {
-            speedCoefficient += speedTimeFactor;
+            DrawBow();
         }
         else if(Input.GetKeyUp(KeyCode.Space))
         {
-            SpawnArrow(speedCoefficient);
-            speedCoefficient = 0;
+            ReleaseArrow();
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
@@ -45,6 +57,29 @@ public class PlayerController : MonoBehaviour {
 
         //arrow.transform.localScale = arrowSpawn.transform.lossyScale;
         arrowSpawn.SetActive(false);
+    }
+
+    private void DrawBow()
+    {
+        const float drawSpeedFactor = 0.05f;
+        const float drawEndString = 7.0f;
+        float drawEndArrow = arrowSpawnInitialPosition.x - drawEndString;
+        if (arrowSpawn.transform.localPosition.x > drawEndArrow)
+        {
+            arrowSpawn.transform.Translate(-drawSpeedFactor, 0, 0);
+            bowStringMiddlePointPosition = bowStringRenderer.GetPosition(1);
+            bowStringMiddlePointPosition.y += drawSpeedFactor;
+            bowStringRenderer.SetPosition(1, bowStringMiddlePointPosition);
+            speedCoefficient += speedTimeFactor;
+        }
+     }
+
+    private void ReleaseArrow()
+    {
+        SpawnArrow(speedCoefficient);
+        bowStringRenderer.SetPosition(1, bowStringMiddlePiontInitialPosition);
+        arrowSpawn.transform.localPosition = arrowSpawnInitialPosition;
+        speedCoefficient = 0;
     }
 }
 
