@@ -1,4 +1,5 @@
-﻿using System.Collections; 
+﻿using Assets.Scripts;
+using System.Collections; 
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -40,33 +41,8 @@ public class PlayerController : MonoBehaviour {
 
                 var trackedBody = bodyPartsData.SingleOrDefault(x => x.IsTracked);
 
-                if (trackedBody != null)
-                {
-                    Vector2 leftWristPos = new Vector2(trackedBody.Joints[JointType.WristLeft].Position.X,
-                                   trackedBody.Joints[JointType.WristLeft].Position.Y);
-                    Vector2 rightWristPos = new Vector2(trackedBody.Joints[JointType.WristRight].Position.X,
-                                                    trackedBody.Joints[JointType.WristRight].Position.Y);
-                    Vector2 ortographicPoint = new Vector2(rightWristPos.x, leftWristPos.y);
-
-                    float wristToWristDistance = (rightWristPos - leftWristPos).magnitude;
-
-                    float pointingWristToOrtographicPoint = (rightWristPos - ortographicPoint).magnitude;
-
-                    float angle = Mathf.Asin(wristToWristDistance / pointingWristToOrtographicPoint);
-                    angle *= Mathf.Deg2Rad;
-
-                    var a = 1;
-                }
-            }
-            else
-            {
-                Vector2 leftWristPos = new Vector2(0, 0);
-                Vector2 rightWristPos = new Vector2(2, 2);
-                Vector2 ortographicPoint = new Vector2(rightWristPos.x, leftWristPos.y);
-
-                var wristToWristDistance = (rightWristPos - leftWristPos).magnitude;
-                var pointingWristToOrtographicPoint = (rightWristPos - ortographicPoint).magnitude;
-                var angle = Mathf.Asin(pointingWristToOrtographicPoint / wristToWristDistance);
+                var wristToWristDistance = trackedBody.GetWristsDistance();
+                var angle = trackedBody.GetPointingAngle();
             }
         }
         
