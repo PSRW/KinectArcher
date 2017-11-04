@@ -43,7 +43,7 @@ public class ArrowMover : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Target"))
+        if (collision.CompareTag("Target") && !collided)
         {
             Destroy(collision.gameObject);
             if (gameController)
