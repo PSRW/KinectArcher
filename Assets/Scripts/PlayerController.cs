@@ -7,14 +7,14 @@ using Windows.Kinect;
 
 public class PlayerController : MonoBehaviour {
 
-    public GameObject ArrowTemplate { get; set; }
-    public GameObject ArrowSpan { get; set; }
+    public GameObject arrowTemplate;
+    public GameObject arrowSpan;
 
     private KinectSensor kinectSensor;
     private Body[] bodyPartsData = null;
     private BodyFrameReader bodyReader;
 
-    public float SpeedTimeFactor { get; set; }
+    public float speedTimeFactor;
     private float speedCoefficient = 0;
 
     void Start () {
@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour {
         
         if(Input.GetKey(KeyCode.Space))
         {
-            speedCoefficient += SpeedTimeFactor;
+            speedCoefficient += speedTimeFactor;
         }
         else if(Input.GetKeyUp(KeyCode.Space))
         {
@@ -57,13 +57,13 @@ public class PlayerController : MonoBehaviour {
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            ArrowSpan.SetActive(true);
+            arrowSpan.SetActive(true);
         }
     }
 
     private void SpawnArrow(float speedFactor)
     {
-        GameObject arrow = Instantiate(ArrowTemplate, ArrowSpan.transform.position, ArrowSpan.transform.rotation);
+        GameObject arrow = Instantiate(arrowTemplate, arrowSpan.transform.position, arrowSpan.transform.rotation);
         Rigidbody2D arrowBody = arrow.GetComponent<Rigidbody2D>();
         float angle = arrow.transform.eulerAngles.z * Mathf.Deg2Rad;
 
@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour {
         arrowBody.velocity = arrowVelocity;
 
         //arrow.transform.localScale = arrowSpawn.transform.lossyScale;
-        ArrowSpan.SetActive(false);
+        arrowSpan.SetActive(false);
     }
 }
 
