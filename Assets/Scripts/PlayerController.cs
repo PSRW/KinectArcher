@@ -6,25 +6,24 @@ using Windows.Kinect;
 
 public class PlayerController : MonoBehaviour {
 
-    public GameObject arrowTemplate;
-    public GameObject arrowSpawn;
+    public GameObject ArrowTemplate { get; set; }
+    public GameObject ArrowSpan { get; set; }
+
     private KinectSensor kinectSensor;
     private Body[] bodyPartsData = null;
-
     private BodyFrameReader bodyReader;
 
-    public float speedTimeFactor;
+    public float SpeedTimeFactor { get; set; }
     private float speedCoefficient = 0;
+
     void Start () {
         kinectSensor = KinectSensor.GetDefault();
         if(kinectSensor != null)
         {
             bodyReader = kinectSensor.BodyFrameSource.OpenReader();
             if(!kinectSensor.IsOpen)
-                kinectSensor.Open();
-            
-        }
-		
+                kinectSensor.Open();           
+        }		
 	}
 
     void FixedUpdate() {
@@ -63,7 +62,7 @@ public class PlayerController : MonoBehaviour {
         
         if(Input.GetKey(KeyCode.Space))
         {
-            speedCoefficient += speedTimeFactor;
+            speedCoefficient += SpeedTimeFactor;
         }
         else if(Input.GetKeyUp(KeyCode.Space))
         {
@@ -72,13 +71,13 @@ public class PlayerController : MonoBehaviour {
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            arrowSpawn.SetActive(true);
+            ArrowSpan.SetActive(true);
         }
     }
 
     private void SpawnArrow(float speedFactor)
     {
-        GameObject arrow = Instantiate(arrowTemplate, arrowSpawn.transform.position, arrowSpawn.transform.rotation);
+        GameObject arrow = Instantiate(ArrowTemplate, ArrowSpan.transform.position, ArrowSpan.transform.rotation);
         Rigidbody2D arrowBody = arrow.GetComponent<Rigidbody2D>();
         float angle = arrow.transform.eulerAngles.z * Mathf.Deg2Rad;
 
@@ -86,7 +85,7 @@ public class PlayerController : MonoBehaviour {
         arrowBody.velocity = arrowVelocity;
 
         //arrow.transform.localScale = arrowSpawn.transform.lossyScale;
-        arrowSpawn.SetActive(false);
+        ArrowSpan.SetActive(false);
     }
 }
 
