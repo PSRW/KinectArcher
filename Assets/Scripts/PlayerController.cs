@@ -58,6 +58,16 @@ public class PlayerController : MonoBehaviour {
                     var a = 1;
                 }
             }
+            else
+            {
+                Vector2 leftWristPos = new Vector2(0, 0);
+                Vector2 rightWristPos = new Vector2(2, 2);
+                Vector2 ortographicPoint = new Vector2(rightWristPos.x, leftWristPos.y);
+
+                var wristToWristDistance = (rightWristPos - leftWristPos).magnitude;
+                var pointingWristToOrtographicPoint = (rightWristPos - ortographicPoint).magnitude;
+                var angle = Mathf.Asin(pointingWristToOrtographicPoint / wristToWristDistance);
+            }
         }
         
         if(Input.GetKey(KeyCode.Space))
