@@ -27,40 +27,38 @@ public class PlayerController : MonoBehaviour {
 		
 	}
 
-    void FixedUpdate () {
-       float bowRotation = Input.GetAxis("Vertical");
+    void FixedUpdate() {
+        float bowRotation = Input.GetAxis("Vertical");
         this.transform.rotation *= Quaternion.Euler(0, 0, bowRotation);
 
-        var frame = bodyReader.AcquireLatestFrame();
-        if(frame != null)
-        {
-            if (bodyPartsData == null)
-                bodyPartsData = new Body[kinectSensor.BodyFrameSource.BodyCount];
-            frame.GetAndRefreshBodyData(bodyPartsData);
-            frame.Dispose();
-            frame = null;
-
-            var trackedBody = bodyPartsData.SingleOrDefault(x => x.IsTracked);
-            
-            if (trackedBody != null)
+        using (var frame = bodyReader.AcquireLatestFrame())
+        { 
+            if (frame != null)
             {
-                Vector2 leftWristPos = new Vector2(trackedBody.Joints[JointType.WristLeft].Position.X,
-                               trackedBody.Joints[JointType.WristLeft].Position.Y);
-                Vector2 rightWristPos = new Vector2(trackedBody.Joints[JointType.WristRight].Position.X,
-                                                trackedBody.Joints[JointType.WristRight].Position.Y);
-                Vector2 ortographicPoint = new Vector2(rightWristPos.x, leftWristPos.y);
+                if (bodyPartsData == null)
+                    bodyPartsData = new Body[kinectSensor.BodyFrameSource.BodyCount];
+                frame.GetAndRefreshBodyData(bodyPartsData);
 
-                float wristToWristDistance = (rightWristPos - leftWristPos).magnitude;
+                var trackedBody = bodyPartsData.SingleOrDefault(x => x.IsTracked);
 
-                float pointingWristToOrtographicPoint = (rightWristPos - ortographicPoint).magnitude;
+                if (trackedBody != null)
+                {
+                    Vector2 leftWristPos = new Vector2(trackedBody.Joints[JointType.WristLeft].Position.X,
+                                   trackedBody.Joints[JointType.WristLeft].Position.Y);
+                    Vector2 rightWristPos = new Vector2(trackedBody.Joints[JointType.WristRight].Position.X,
+                                                    trackedBody.Joints[JointType.WristRight].Position.Y);
+                    Vector2 ortographicPoint = new Vector2(rightWristPos.x, leftWristPos.y);
 
-                float angle = Mathf.Asin(wristToWristDistance / pointingWristToOrtographicPoint);
-                angle *= Mathf.Deg2Rad;
+                    float wristToWristDistance = (rightWristPos - leftWristPos).magnitude;
 
-                var a = 1;
+                    float pointingWristToOrtographicPoint = (rightWristPos - ortographicPoint).magnitude;
 
+                    float angle = Mathf.Asin(wristToWristDistance / pointingWristToOrtographicPoint);
+                    angle *= Mathf.Deg2Rad;
+
+                    var a = 1;
+                }
             }
-
         }
         
         if(Input.GetKey(KeyCode.Space))
