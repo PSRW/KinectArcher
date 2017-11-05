@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using Assets.Scripts;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Windows.Kinect;
 
@@ -18,20 +20,45 @@ public class PlayerController : MonoBehaviour {
     private Vector3 arrowSpawnInitialPosition = new Vector3();
 
     private KinectSensor kinectSensor;
+    private Body[] bodyPartsData = null;
+    private BodyFrameReader bodyReader;
+
     public float speedTimeFactor;
     private float speedCoefficient = 0;
+
     void Start () {
         bowStringRenderer = bowString.GetComponent<LineRenderer>();
         arrowSpawnInitialPosition = arrowSpawn.transform.localPosition;
 
         bowStringMiddlePointInitialPosition = bowStringRenderer.GetPosition(1);
+        kinectSensor = KinectSensor.GetDefault();
+        if(kinectSensor != null)
+        {
+            bodyReader = kinectSensor.BodyFrameSource.OpenReader();
+            if(!kinectSensor.IsOpen)
+                kinectSensor.Open();
+        }
 	}
 
-    void FixedUpdate () {
-       float bowRotation = Input.GetAxis("Vertical");
+    void FixedUpdate() {
+        float bowRotation = Input.GetAxis("Vertical");
         this.transform.rotation *= Quaternion.Euler(0, 0, bowRotation);
 
-        
+        using (var frame = bodyReader.AcquireLatestFrame())
+        {
+            if (frame != null)
+            {
+                if (bodyPartsData == null)
+                    bodyPartsData = new Body[kinectSensor.BodyFrameSource.BodyCount];
+                frame.GetAndRefreshBodyData(bodyPartsData);
+
+                var trackedBody = bodyPartsData.SingleOrDefault(x => x.IsTracked);
+
+                var wristToWristDistance = trackedBody.GetWristsDistance();
+                var angle = trackedBody.GetPointingAngle();
+            }
+        }
+
         if(Input.GetKey(KeyCode.Space))
         {
             DrawBow();
@@ -82,4 +109,3 @@ public class PlayerController : MonoBehaviour {
         speedCoefficient = 0;
     }
 }
-

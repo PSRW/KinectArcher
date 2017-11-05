@@ -13,7 +13,8 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.1.0p5</UnityVersion>
@@ -85,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ArrowMover.cs" />
+    <Compile Include="Assets\Scripts\Extensions.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\TargetMover.cs" />
