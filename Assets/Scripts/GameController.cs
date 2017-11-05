@@ -40,7 +40,7 @@ public class GameController : MonoBehaviour {
         float xPos = Random.Range(targetSpawnZone.xMin, targetSpawnZone.xMax);
         float yPos = Random.Range(targetSpawnZone.yMin, targetSpawnZone.yMax);
 
-        GameObject target = Instantiate(targetTemplate, new Vector3(xPos, yPos, -5), this.transform.rotation);
+        GameObject target = Instantiate(targetTemplate, new Vector3(xPos, yPos, targetTemplate.transform.position.z), this.transform.rotation);
         target.GetComponent<Rigidbody2D>().velocity = new Vector3(Random.Range(targetVelocityRange.xMin, targetVelocityRange.xMax), 
                                                                   Random.Range(targetVelocityRange.yMin, targetVelocityRange.yMax), 
                                                                   0);

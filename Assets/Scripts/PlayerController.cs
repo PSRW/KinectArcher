@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour {
     private LineRenderer bowStringRenderer;
 
     private Vector3 bowStringMiddlePointPosition = new Vector3();
-    private Vector3 bowStringMiddlePiontInitialPosition = new Vector3();
+    private Vector3 bowStringMiddlePointInitialPosition = new Vector3();
     private Vector3 arrowSpawnInitialPosition = new Vector3();
 
     private KinectSensor kinectSensor;
@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour {
         bowStringRenderer = bowString.GetComponent<LineRenderer>();
         arrowSpawnInitialPosition = arrowSpawn.transform.localPosition;
 
-        bowStringMiddlePiontInitialPosition = bowStringRenderer.GetPosition(1);
+        bowStringMiddlePointInitialPosition = bowStringRenderer.GetPosition(1);
 	}
 
     void FixedUpdate () {
@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour {
     private void ReleaseArrow()
     {
         SpawnArrow(speedCoefficient);
-        bowStringRenderer.SetPosition(1, bowStringMiddlePiontInitialPosition);
+        bowStringRenderer.SetPosition(1, bowStringMiddlePointInitialPosition);
         arrowSpawn.transform.localPosition = arrowSpawnInitialPosition;
         speedCoefficient = 0;
     }
