@@ -59,17 +59,23 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
-        if(Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
-            DrawBow();
+            if(arrowSpawn.activeInHierarchy)
+                DrawBow();
         }
-        else if(Input.GetKeyUp(KeyCode.Space))
+        else if(Input.GetKeyUp(KeyCode.Space) && arrowSpawn.activeInHierarchy)
         {
-            ReleaseArrow();
+            if(arrowSpawn.activeInHierarchy)
+                ReleaseArrow();
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
             arrowSpawn.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.G))
+        {
+            this.transform.eulerAngles = new Vector3(0, 0, 90);
         }
     }
 
