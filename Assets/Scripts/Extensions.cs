@@ -38,7 +38,11 @@ namespace Assets.Scripts
             Vector2 ortographicPoint = new Vector2(holdingHandJointVector.x, pointingHandJointVector.y);
             float pointingWristToOrtographicPoint = (holdingHandJointVector - ortographicPoint).magnitude;
 
-            return Mathf.Asin(pointingWristToOrtographicPoint / trackedBody.GetWristsDistance());
+
+            if(pointingHandJoint.Position.Y > holdingHandJoint.Position.Y )
+                return Mathf.Asin(pointingWristToOrtographicPoint / trackedBody.GetWristsDistance());
+            else
+                return -Mathf.Asin(pointingWristToOrtographicPoint / trackedBody.GetWristsDistance());
         }
     }
 }

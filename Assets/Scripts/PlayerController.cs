@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,24 +41,32 @@ public class PlayerController : MonoBehaviour {
         }
 	}
 
-    void FixedUpdate() {
-        float bowRotation = Input.GetAxis("Vertical");
-        this.transform.rotation *= Quaternion.Euler(0, 0, bowRotation);
-
+    private void Update()
+    {
         using (var frame = bodyReader.AcquireLatestFrame())
         {
             if (frame != null)
             {
                 if (bodyPartsData == null)
                     bodyPartsData = new Body[kinectSensor.BodyFrameSource.BodyCount];
-                frame.GetAndRefreshBodyData(bodyPartsData);
-
-                var trackedBody = bodyPartsData.SingleOrDefault(x => x.IsTracked);
-
-                var wristToWristDistance = trackedBody.GetWristsDistance();
-                var angle = trackedBody.GetPointingAngle();
+                frame.GetAndRefreshBodyData(bodyPartsData);              
+                var trackedBody = bodyPartsData.FirstOrDefault(x => x.IsTracked);
+                if (trackedBody != null)
+                {
+                    var wristToWristDistance = trackedBody.GetWristsDistance();
+                    var angle = trackedBody.GetPointingAngle();
+                    angle *= Mathf.Rad2Deg;
+                    this.transform.eulerAngles = new Vector3(0, 0, angle);
+                    Debug.Log(String.Format("{0} {1}", wristToWristDistance, angle));
+                }
             }
         }
+
+    }
+    void FixedUpdate() {
+        float bowRotation = Input.GetAxis("Vertical");
+        this.transform.rotation *= Quaternion.Euler(0, 0, bowRotation);
+
 
         if (Input.GetKey(KeyCode.Space))
         {
@@ -77,6 +86,7 @@ public class PlayerController : MonoBehaviour {
         {
             this.transform.eulerAngles = new Vector3(0, 0, 90);
         }
+
     }
 
     private void SpawnArrow(float speedFactor)
