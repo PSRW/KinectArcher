@@ -43,13 +43,21 @@ public class PlayerController : MonoBehaviour {
 
     private void Update()
     {
+
+
+    }
+
+    void FixedUpdate() {
+        float bowRotation = Input.GetAxis("Vertical");
+        this.transform.rotation *= Quaternion.Euler(0, 0, bowRotation);
+
         using (var frame = bodyReader.AcquireLatestFrame())
         {
             if (frame != null)
             {
                 if (bodyPartsData == null)
                     bodyPartsData = new Body[kinectSensor.BodyFrameSource.BodyCount];
-                frame.GetAndRefreshBodyData(bodyPartsData);              
+                frame.GetAndRefreshBodyData(bodyPartsData);
                 var trackedBody = bodyPartsData.FirstOrDefault(x => x.IsTracked);
                 if (trackedBody != null)
                 {
@@ -58,22 +66,21 @@ public class PlayerController : MonoBehaviour {
                     angle *= Mathf.Rad2Deg;
                     this.transform.eulerAngles = new Vector3(0, 0, angle);
                     Debug.Log(String.Format("{0} {1}", wristToWristDistance, angle));
+
+                    if (wristToWristDistance < 0.2)
+                        arrowSpawn.SetActive(true);
+                    if (trackedBody.IsHandOpened() && arrowSpawn.activeInHierarchy)
+                        ReleaseArrow();
                 }
             }
         }
-
-    }
-    void FixedUpdate() {
-        float bowRotation = Input.GetAxis("Vertical");
-        this.transform.rotation *= Quaternion.Euler(0, 0, bowRotation);
-
 
         if (Input.GetKey(KeyCode.Space))
         {
             if(arrowSpawn.activeInHierarchy)
                 DrawBow();
         }
-        else if(Input.GetKeyUp(KeyCode.Space) && arrowSpawn.activeInHierarchy)
+        else if(Input.GetKeyUp(KeyCode.Space))
         {
             if(arrowSpawn.activeInHierarchy)
                 ReleaseArrow();

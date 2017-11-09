@@ -44,5 +44,10 @@ namespace Assets.Scripts
             else
                 return -Mathf.Asin(pointingWristToOrtographicPoint / trackedBody.GetWristsDistance());
         }
+
+        public static bool IsHandOpened(this Body trackedBody, bool isPointingHandRight = true)
+        {
+            return isPointingHandRight? trackedBody.HandLeftState == HandState.Open : trackedBody.HandRightState == HandState.Open;
+        }
     }
 }
