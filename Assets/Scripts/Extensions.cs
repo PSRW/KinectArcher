@@ -9,6 +9,7 @@ namespace Assets.Scripts
 {
     public static class Extensions
     {
+
         /// <summary>
         /// Get distance between wrists of the tracked body
         /// </summary>
@@ -48,6 +49,32 @@ namespace Assets.Scripts
         public static bool IsHandOpened(this Body trackedBody, bool isPointingHandRight = true)
         {
             return isPointingHandRight? trackedBody.HandLeftState == HandState.Open : trackedBody.HandRightState == HandState.Open;
+        }
+
+
+        public class BowDrawCharacteristics
+        {
+            public float BowStringDraw { get; set; }
+            public float BowStringDrawCoefficient {get; set;}
+        }
+
+        public static BowDrawCharacteristics GetDrawCharacteristics(float wristDistance)
+        {
+            float wristMinimumDistance = 0.1f;
+            float wristMaximumDistance = 0.7f;
+            float animationDrawMinimum = 6.1f;
+            float animationDrawMaximum = 15.0f;
+
+            BowDrawCharacteristics result = new BowDrawCharacteristics
+            {
+                BowStringDrawCoefficient = (wristDistance - wristMinimumDistance) / (wristMaximumDistance - wristMinimumDistance)
+            };
+
+            result.BowStringDraw =  result.BowStringDrawCoefficient * (animationDrawMaximum - animationDrawMinimum) + animationDrawMinimum;
+            return result;
+
+         
+
         }
     }
 }
