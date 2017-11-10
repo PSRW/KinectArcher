@@ -211,7 +211,7 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.Space) && playerBow.ReadyToDraw)
         {
-            playerBow.Draw(0.4f);
+            playerBow.Draw();
         }
         else if (Input.GetKeyUp(KeyCode.Space) && playerBow.ReadyToDraw)
         {
