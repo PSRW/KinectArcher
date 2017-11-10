@@ -6,32 +6,163 @@ using System.Linq;
 using UnityEngine;
 using Windows.Kinect;
 
+[System.Serializable]
+public class Bow
+{
+    public GameObject bowObject;
+    public Arrow arrow;
+    public BowString bowString;
+
+    public bool ReadyToDraw { get { return arrow.spawnObject.activeInHierarchy; } }
+    private float currentDrawForce = 0;
+
+    public Bow()
+    {
+        arrow = new Arrow();
+        bowString = new BowString();
+    }
+
+    public void Initialize()
+    {
+        arrow.Initialize();
+        bowString.Initialize();
+    }
+
+    public void Rotate(float angle) { bowObject.transform.Rotate(0, 0, angle); }
+
+    public void SetRotation(float angle) { bowObject.transform.eulerAngles = new Vector3(0, 0 , angle); }
+
+    public void ReleaseArrow()
+    {
+        arrow.Spawn(currentDrawForce);
+        bowString.ResetDraw();
+        arrow.ResetSpawnPosition();
+        currentDrawForce = 0;
+    }
+
+    public void LoadArrow()
+    {
+        arrow.spawnObject.SetActive(true);
+    }
+    
+    public void Draw()
+    {
+        float drawEndArrow = -(bowString.maxDrawPoint - bowString.StringInitialPosition.y);
+
+        if (arrow.spawnObject.transform.localPosition.x > drawEndArrow)
+        {
+            arrow.spawnObject.transform.Translate(-bowString.drawSpeedFactor, 0, 0);
+            bowString.DrawOverTime();
+            
+            currentDrawForce += bowString.drawForceTimeFactor;
+        }
+    }
+
+    public void Draw(float wristDistance)
+    {
+       float drawRatio = bowString.DrawByDistance(wristDistance);
+        arrow.spawnObject.transform.localPosition = new Vector3(arrow.SpawnInitialPosition.x + bowString.StringInitialPosition.y - bowString.StringPosition.y,
+                                                                arrow.spawnObject.transform.localPosition.y,
+                                                                arrow.spawnObject.transform.localPosition.z);
+       currentDrawForce = arrow.maxSpeed * drawRatio;
+    }
+
+}
+
+[System.Serializable]
+public class BowString
+{
+    public GameObject stringObject;
+    public float wristMinDistance = 0.1f;
+    public float wristMaxDistance = 0.7f;
+    public float maxDrawPoint = 15.0f;
+    public float drawSpeedFactor = 0.2f;
+    public float drawForceTimeFactor = 6.5f;
+
+    private LineRenderer bowStringRenderer;
+    private Vector3 stringPosition = new Vector3();
+    public Vector3 StringPosition { get { return stringPosition; } }
+    private Vector3 stringInitialPosition = new Vector3();
+    public Vector3 StringInitialPosition { get { return stringInitialPosition; } }
+
+    public void ResetDraw ()
+    {
+        bowStringRenderer.SetPosition(1, stringInitialPosition);
+    }
+
+    public void DrawOverTime()
+    {
+        stringPosition = bowStringRenderer.GetPosition(1);
+        stringPosition.y += drawSpeedFactor * 2;
+        bowStringRenderer.SetPosition(1, stringPosition);
+    }
+
+    public float DrawByDistance(float wristDistance)
+    {
+        float drawRatio = (wristDistance - wristMinDistance) / (wristMaxDistance - wristMinDistance);
+        stringPosition = stringInitialPosition;
+        stringPosition.y = drawRatio * (maxDrawPoint - stringInitialPosition.y) + stringInitialPosition.y;
+        bowStringRenderer.SetPosition(1, stringPosition);
+
+        return drawRatio;
+    }
+    public void Initialize()
+    {
+        bowStringRenderer = stringObject.GetComponent<LineRenderer>();
+        stringInitialPosition = bowStringRenderer.GetPosition(1);
+    }
+
+
+}
+
+[System.Serializable]
+public class Arrow
+{
+    public GameObject template;
+    public GameObject spawnObject;
+    private Vector3 spawnInitialPosition = new Vector3();
+    public Vector3 SpawnInitialPosition { get { return spawnInitialPosition; } }
+    public float maxSpeed;
+    
+    public void Spawn(float arrowSpeed)
+    {
+        GameObject arrow = UnityEngine.Object.Instantiate(template, spawnObject.transform.position, spawnObject.transform.rotation);
+        Rigidbody2D arrowBody = arrow.GetComponent<Rigidbody2D>();
+        float angle = arrow.transform.eulerAngles.z * Mathf.Deg2Rad;
+
+        Vector2 arrowVelocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * arrowSpeed;
+        arrowBody.velocity = arrowVelocity;
+
+        Debug.Log(arrowBody.velocity);
+        spawnObject.SetActive(false);
+    }
+
+    public void ResetSpawnPosition()
+    {
+        spawnObject.transform.localPosition = spawnInitialPosition;
+    }
+    
+    public void Initialize()
+    {
+        spawnInitialPosition = spawnObject.transform.localPosition;
+    }
+    
+
+}
+
+
 public class PlayerController : MonoBehaviour {
 
-
-    public GameObject arrowTemplate;
-    public GameObject arrowSpawn;
-    public GameObject bowString;
-    
-    private LineRenderer bowStringRenderer;
-
-    private Vector3 bowStringMiddlePointPosition = new Vector3();
-    private Vector3 bowStringMiddlePointInitialPosition = new Vector3();
-    private Vector3 arrowSpawnInitialPosition = new Vector3();
+    public Bow playerBow = new Bow();
 
     private KinectSensor kinectSensor;
     private Body[] bodyPartsData = null;
     private BodyFrameReader bodyReader;
 
-    public float speedTimeFactor;
-    public float arrowMaxSpeed;
-    private float arrowSpeedCoefficient = 0;
     
     void Start () {
-        bowStringRenderer = bowString.GetComponent<LineRenderer>();
-        arrowSpawnInitialPosition = arrowSpawn.transform.localPosition;
 
-        bowStringMiddlePointInitialPosition = bowStringRenderer.GetPosition(1);
+        playerBow.Initialize();
         kinectSensor = KinectSensor.GetDefault();
         if(kinectSensor != null)
         {
@@ -42,9 +173,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
     void FixedUpdate() {
-        float bowRotation = Input.GetAxis("Vertical");
-        this.transform.rotation *= Quaternion.Euler(0, 0, bowRotation);
-
         using (var frame = bodyReader.AcquireLatestFrame())
         {
             if (frame != null)
@@ -58,92 +186,45 @@ public class PlayerController : MonoBehaviour {
                     var wristToWristDistance = trackedBody.GetWristsDistance();
                     var angle = trackedBody.GetPointingAngle();
                     angle *= Mathf.Rad2Deg;
-                    this.transform.eulerAngles = new Vector3(0, 0, angle);
+                    playerBow.Rotate(angle);
                     Debug.Log(String.Format("{0} {1}", wristToWristDistance, angle));
 
                     if (wristToWristDistance < 0.2)
-                        arrowSpawn.SetActive(true);
-                    if (arrowSpawn.activeInHierarchy)
+                        playerBow.LoadArrow();
+                    if (playerBow.ReadyToDraw)
                     {
-                        DrawBow(wristToWristDistance);
+                        playerBow.Draw(wristToWristDistance);
                     }
-                    if (trackedBody.IsHandOpened() && arrowSpawn.activeInHierarchy)
-                        ReleaseArrow();
+                    if (trackedBody.IsHandOpened() && playerBow.ReadyToDraw)
+                        playerBow.ReleaseArrow();
                 }
             }
         }
-
         getKeyboardInputs();
 
     }
 
     private void getKeyboardInputs()
     {
-        if (Input.GetKey(KeyCode.Space) && arrowSpawn.activeInHierarchy)
+        float bowRotation = Input.GetAxis("Vertical");
+        playerBow.Rotate(bowRotation);
+
+        if (Input.GetKey(KeyCode.Space) && playerBow.ReadyToDraw)
         {
-                DrawBow(0.2f);
+            playerBow.Draw(0.4f);
         }
-        else if (Input.GetKeyUp(KeyCode.Space) && arrowSpawn.activeInHierarchy)
+        else if (Input.GetKeyUp(KeyCode.Space) && playerBow.ReadyToDraw)
         {
-               ReleaseArrow();
+            playerBow.ReleaseArrow();
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            arrowSpawn.SetActive(true);
+            playerBow.LoadArrow();
         }
         else if (Input.GetKeyDown(KeyCode.G))
         {
-            this.transform.eulerAngles = new Vector3(0, 0, 90);
-        }
-    }
-    private void SpawnArrow(float speedFactor)
-    {
-        GameObject arrow = Instantiate(arrowTemplate, arrowSpawn.transform.position, arrowSpawn.transform.rotation);
-        Rigidbody2D arrowBody = arrow.GetComponent<Rigidbody2D>();
-        float angle = arrow.transform.eulerAngles.z * Mathf.Deg2Rad;
-
-        Vector2 arrowVelocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * speedFactor;
-        arrowBody.velocity = arrowVelocity;
-
-        Debug.Log(arrowBody.velocity);
-        arrowSpawn.SetActive(false);
-    }
-
-    private void DrawBow(float wristDistance)
-    {
-        Extensions.BowDrawCharacteristics bowDrawCharacteristics = Extensions.GetDrawCharacteristics(wristDistance);
-
-        arrowSpawn.transform.localPosition = new Vector3(-bowDrawCharacteristics.BowStringDraw + arrowSpawnInitialPosition.x + bowStringMiddlePointInitialPosition.y,
-                                                         arrowSpawn.transform.localPosition.y,
-                                                         arrowSpawn.transform.localPosition.z);
-
-        bowStringMiddlePointPosition = bowStringRenderer.GetPosition(1);
-        bowStringMiddlePointPosition.y = bowDrawCharacteristics.BowStringDraw;
-        bowStringRenderer.SetPosition(1, bowStringMiddlePointPosition);
-
-        arrowSpeedCoefficient = arrowMaxSpeed * bowDrawCharacteristics.BowStringDrawCoefficient;
-     }
-
-    private void DrawBow()
-    {
-        const float drawSpeedFactor = 0.2f;
-        const float drawEndString = 15.0f;
-        float drawEndArrow = -(drawEndString - bowStringMiddlePointInitialPosition.y);
-        if (arrowSpawn.transform.localPosition.x > drawEndArrow)
-        {
-            arrowSpawn.transform.Translate(-drawSpeedFactor, 0, 0);
-            bowStringMiddlePointPosition = bowStringRenderer.GetPosition(1);
-            bowStringMiddlePointPosition.y += drawSpeedFactor*2;
-            bowStringRenderer.SetPosition(1, bowStringMiddlePointPosition);
-            arrowSpeedCoefficient += speedTimeFactor;
+            playerBow.SetRotation(90);
         }
     }
 
-    private void ReleaseArrow()
-    {
-        SpawnArrow(arrowSpeedCoefficient);
-        bowStringRenderer.SetPosition(1, bowStringMiddlePointInitialPosition);
-        arrowSpawn.transform.localPosition = arrowSpawnInitialPosition;
-        arrowSpeedCoefficient = 0;
-    }
 }
