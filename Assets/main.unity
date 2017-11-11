@@ -2292,7 +2292,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1234098239}
-  - component: {fileID: 1234098240}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -2306,33 +2305,16 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1234098238}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -43.63, y: -12.6, z: -5}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children:
   - {fileID: 438039128}
   - {fileID: 520787668}
   - {fileID: 264405649}
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_Father: {fileID: 1754587499}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1234098240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1234098238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ab02c8638cc3c54fb4dc08954bd9061, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arrowTemplate: {fileID: 1018088257692780, guid: 607645095b5acbc4c80cac83e6271c36,
-    type: 2}
-  arrowSpawn: {fileID: 438039127}
-  bowString: {fileID: 520787667}
-  speedTimeFactor: 6.5
-  arrowMaxSpeed: 180
 --- !u!1001 &1238254200
 Prefab:
   m_ObjectHideFlags: 0
@@ -3633,6 +3615,61 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
+--- !u!1 &1754587497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1754587499}
+  - component: {fileID: 1754587498}
+  m_Layer: 0
+  m_Name: Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1754587498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1754587497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ab02c8638cc3c54fb4dc08954bd9061, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerBow:
+    bowObject: {fileID: 1234098238}
+    arrow:
+      template: {fileID: 1018088257692780, guid: 607645095b5acbc4c80cac83e6271c36,
+        type: 2}
+      spawnObject: {fileID: 438039127}
+      maxSpeed: 180
+    bowString:
+      stringObject: {fileID: 520787667}
+      wristMinDistance: 0.1
+      wristMaxDistance: 0.7
+      maxDrawPoint: 15
+      drawSpeedFactor: 0.2
+      drawForceTimeFactor: 6.5
+--- !u!4 &1754587499
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1754587497}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1234098239}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1762018294
 GameObject:
   m_ObjectHideFlags: 0
