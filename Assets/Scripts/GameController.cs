@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 [System.Serializable]
@@ -26,9 +27,12 @@ public class GameController : MonoBehaviour {
     public TargetSpawnZone targetSpawnZone;
     public TargetVelocityRange targetVelocityRange;
     public GameObject targetTemplate;
+    public Text scoreText;
+
+    private int score = 0;
 	
 	void Start () {
-		
+        scoreText.text = "Score: " + score;
 	}
 	
 	// Update is called once per frame
@@ -37,6 +41,8 @@ public class GameController : MonoBehaviour {
 
     public void SpawnTarget()
     {
+        score += 200;
+        scoreText.text = "Score: " + score;
         float xPos = Random.Range(targetSpawnZone.xMin, targetSpawnZone.xMax);
         float yPos = Random.Range(targetSpawnZone.yMin, targetSpawnZone.yMax);
 
@@ -44,5 +50,11 @@ public class GameController : MonoBehaviour {
         target.GetComponent<Rigidbody2D>().velocity = new Vector3(Random.Range(targetVelocityRange.xMin, targetVelocityRange.xMax), 
                                                                   Random.Range(targetVelocityRange.yMin, targetVelocityRange.yMax), 
                                                                   0);
+    }
+
+    public void decreaseScore()
+    {
+        score -= 50;
+        scoreText.text = "Score: " + score;
     }
 }

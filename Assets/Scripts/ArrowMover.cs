@@ -37,6 +37,8 @@ public class ArrowMover : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if(!collided)
+            gameController.decreaseScore();
         collided = true;
         Destroy(this.gameObject, lifeTimeAfterCollision);
     }
@@ -46,6 +48,7 @@ public class ArrowMover : MonoBehaviour {
         if (collision.CompareTag("Target") && !collided)
         {
             Destroy(collision.gameObject);
+            collided = true;
             if (gameController)
             {
                 gameController.SpawnTarget();

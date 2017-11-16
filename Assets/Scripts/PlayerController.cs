@@ -186,7 +186,8 @@ public class PlayerController : MonoBehaviour {
                     var wristToWristDistance = trackedBody.GetWristsDistance();
                     var angle = trackedBody.GetPointingAngle();
                     angle *= Mathf.Rad2Deg;
-                    playerBow.Rotate(angle);
+                    if(wristToWristDistance > 0.2)
+                        playerBow.SetRotation(angle);
                     Debug.Log(String.Format("{0} {1}", wristToWristDistance, angle));
 
                     if (wristToWristDistance < 0.2)
