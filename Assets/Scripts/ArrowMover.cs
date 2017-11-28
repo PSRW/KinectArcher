@@ -37,7 +37,7 @@ public class ArrowMover : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if(!collided)
+        if(!collided && gameController != null)
             gameController.decreaseScore();
         collided = true;
         Destroy(this.gameObject, lifeTimeAfterCollision);

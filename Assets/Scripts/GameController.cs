@@ -28,6 +28,9 @@ public class GameController : MonoBehaviour {
     public TargetVelocityRange targetVelocityRange;
     public GameObject targetTemplate;
     public Text scoreText;
+    public float windRange;
+
+    private float windSpeed = 0;
 
     private int score = 0;
 	
@@ -56,5 +59,17 @@ public class GameController : MonoBehaviour {
     {
         score -= 50;
         scoreText.text = "Score: " + score;
+    }
+
+
+    public float generateWind()
+    {
+        windSpeed =  Random.Range(-windRange, windRange);
+        return windSpeed;
+    }
+
+    public float getWind()
+    {
+        return windSpeed;
     }
 }
