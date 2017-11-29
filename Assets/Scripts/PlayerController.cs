@@ -229,6 +229,10 @@ public class PlayerController : MonoBehaviour {
         {
             playerBow.SetRotation(90);
         }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
 }
