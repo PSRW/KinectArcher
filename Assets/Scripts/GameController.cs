@@ -23,13 +23,15 @@ public class TargetVelocityRange
 
 public class GameController : MonoBehaviour {
 
+    public GameObject windArrow;
     public GameObject arrow;
     public TargetSpawnZone targetSpawnZone;
     public TargetVelocityRange targetVelocityRange;
     public GameObject targetTemplate;
     public Text scoreText;
     public Text windText;
-    public float windRange = 5;
+    public float windRange = 3;
+    private bool isWindArrowRotated;
 
     public static float windSpeed = 0;
     private int score = 0;
@@ -37,7 +39,7 @@ public class GameController : MonoBehaviour {
 	void Start () {
         scoreText.text = "Score: " + score;
         generateWind();
-        updateWindText();
+        updateWind();
 	}
 	
 	// Update is called once per frame
@@ -49,7 +51,7 @@ public class GameController : MonoBehaviour {
     {
         increaseScore(200);
         generateWind();
-        updateWindText();
+        updateWind();
 
         float xPos = Random.Range(targetSpawnZone.xMin, targetSpawnZone.xMax);
         float yPos = Random.Range(targetSpawnZone.yMin, targetSpawnZone.yMax);
@@ -72,14 +74,27 @@ public class GameController : MonoBehaviour {
         scoreText.text = "Score: " + score;
     }
 
-    private void updateWindText()
+    private void updateWind()
     {
-        windText.text = windSpeed.ToString("n1");
+        if (isWindArrowRotated)
+        {
+            windArrow.transform.Rotate(0, 0, -180);
+            isWindArrowRotated = false;
+        }
+
+        if(windSpeed < 0)
+        {
+            windArrow.transform.Rotate(0, 0, 180);
+            isWindArrowRotated = true;
+        }
+
+        float windSpeedWithoutSign = Mathf.Abs(windSpeed);
+        windText.text = windSpeedWithoutSign.ToString("n1");
     }
 
     private float generateWind()
     {
-        windRange = 5;
+        windRange = 3;
         windSpeed =  Random.Range(-windRange, windRange);
         return windSpeed;
     }

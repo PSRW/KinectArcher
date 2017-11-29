@@ -34,7 +34,7 @@ public class Bow
 
     public void ReleaseArrow()
     {
-        currentDrawForce += GameController.windSpeed * 20;
+        currentDrawForce += GameController.windSpeed * 10;
         arrow.Spawn(currentDrawForce);
         bowString.ResetDraw();
         arrow.ResetSpawnPosition();
