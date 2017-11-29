@@ -34,6 +34,7 @@ public class Bow
 
     public void ReleaseArrow()
     {
+        currentDrawForce += GameController.windSpeed * 20;
         arrow.Spawn(currentDrawForce);
         bowString.ResetDraw();
         arrow.ResetSpawnPosition();
@@ -128,6 +129,7 @@ public class Arrow
     {
         GameObject arrow = UnityEngine.Object.Instantiate(template, spawnObject.transform.position, spawnObject.transform.rotation);
         Rigidbody2D arrowBody = arrow.GetComponent<Rigidbody2D>();
+
         float angle = arrow.transform.eulerAngles.z * Mathf.Deg2Rad;
 
         Vector2 arrowVelocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * arrowSpeed;
@@ -146,8 +148,6 @@ public class Arrow
     {
         spawnInitialPosition = spawnObject.transform.localPosition;
     }
-    
-
 }
 
 
@@ -173,6 +173,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
     void FixedUpdate() {
+        if (bodyReader == null)
+            return;
+
         using (var frame = bodyReader.AcquireLatestFrame())
         {
             if (frame != null)

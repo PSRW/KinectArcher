@@ -28,24 +28,29 @@ public class GameController : MonoBehaviour {
     public TargetVelocityRange targetVelocityRange;
     public GameObject targetTemplate;
     public Text scoreText;
-    public float windRange;
+    public Text windText;
+    public float windRange = 5;
 
-    private float windSpeed = 0;
-
+    public static float windSpeed = 0;
     private int score = 0;
 	
 	void Start () {
         scoreText.text = "Score: " + score;
+        generateWind();
+        updateWindText();
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+
 	}
 
     public void SpawnTarget()
     {
-        score += 200;
-        scoreText.text = "Score: " + score;
+        increaseScore(200);
+        generateWind();
+        updateWindText();
+
         float xPos = Random.Range(targetSpawnZone.xMin, targetSpawnZone.xMax);
         float yPos = Random.Range(targetSpawnZone.yMin, targetSpawnZone.yMax);
 
@@ -61,9 +66,20 @@ public class GameController : MonoBehaviour {
         scoreText.text = "Score: " + score;
     }
 
-
-    public float generateWind()
+    public void increaseScore(int increseScoreValue)
     {
+        score += increseScoreValue;
+        scoreText.text = "Score: " + score;
+    }
+
+    private void updateWindText()
+    {
+        windText.text = windSpeed.ToString("n1");
+    }
+
+    private float generateWind()
+    {
+        windRange = 5;
         windSpeed =  Random.Range(-windRange, windRange);
         return windSpeed;
     }
