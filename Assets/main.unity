@@ -3517,6 +3517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f28092a17ae23e43b8132c14e915edb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windArrow: {fileID: 1962484341}
   arrow: {fileID: 1018088257692780, guid: 607645095b5acbc4c80cac83e6271c36, type: 2}
   targetSpawnZone:
     xMin: 15
@@ -3531,6 +3532,7 @@ MonoBehaviour:
   targetTemplate: {fileID: 1588514801295030, guid: 2d95ec382b4ab3f4a8ea95b49e5286f8,
     type: 2}
   scoreText: {fileID: 2055750920}
+  windText: {fileID: 1646831928}
   windRange: 0
 --- !u!4 &1631144049
 Transform:
@@ -3577,7 +3579,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 83.3, y: -61.7}
+  m_AnchoredPosition: {x: 118.7, y: -53.9}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1646831928
@@ -4371,14 +4373,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1962484341}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7159974, w: 0.698103}
-  m_LocalPosition: {x: 15.18, y: 28.4, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 12.9, y: 28.69, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1070486425}
   m_Father: {fileID: 0}
   m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 91.45}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!1 &1977796052
 GameObject:
   m_ObjectHideFlags: 0
